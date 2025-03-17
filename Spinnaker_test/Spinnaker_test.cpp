@@ -1,28 +1,117 @@
-﻿// Spinnaker_test.cpp : 이 파일에는 'main' 함수가 포함됩니다. 거기서 프로그램 실행이 시작되고 종료됩니다.
+﻿#include "stdafx.h"
+
+#include "Acquisition.h"
 
 
-#include "Spinnaker.h"
-#include "SpinGenApi/SpinnakerGenApi.h"
-#include <iostream>
-#include <sstream>
 
-using namespace Spinnaker;
-using namespace Spinnaker::GenApi;
-using namespace Spinnaker::GenICam;
-using namespace std;
-
-int main()
+// Example entry point; please see Enumeration example for more in-depth
+// comments on preparing and cleaning up the system.
+int main(int argc, char** argv)
 {
-	cout << "Hello World!\n";
+	Acquisition* m_Acquisition = new Acquisition;
+
+	// Since this application saves images in the current folder
+	// we must ensure that we have permission to write to this folder.
+	// If we do not have permission, fail right away.
+	FILE* tempFile = fopen("test.txt", "w+");
+	if (tempFile == nullptr)
+	{
+		cout << "Failed to create file in current folder.  Please check "
+			"permissions."
+			<< endl;
+		cout << "Press Enter to exit..." << endl;
+		getchar();
+		return -1;
+	}
+	fclose(tempFile);
+	remove("test.txt");
+
+	// Print application build information
+	cout << "Application build date: " << __DATE__ << " " << __TIME__ << endl << endl;
+
+	// Retrieve singleton reference to system object
+	SystemPtr system = System::GetInstance();
+
+	// Print out current library version
+	const LibraryVersion spinnakerLibraryVersion = system->GetLibraryVersion();
+	cout << "Spinnaker library version: " << spinnakerLibraryVersion.major << "." << spinnakerLibraryVersion.minor
+		<< "." << spinnakerLibraryVersion.type << "." << spinnakerLibraryVersion.build << endl
+		<< endl;
+
+	// Retrieve list of cameras from the system
+	CameraList camList = system->GetCameras();
+
+	const unsigned int numCameras = camList.GetSize();
+
+	cout << "Number of cameras detected: " << numCameras << endl << endl;
+
+	// Finish if there are no cameras
+	if (numCameras == 0)
+	{
+		// Clear camera list before releasing system
+		camList.Clear();
+
+		// Release system
+		system->ReleaseInstance();
+
+		cout << "Not enough cameras!" << endl;
+		cout << "Done! Press Enter to exit..." << endl;
+		getchar();
+
+		return -1;
+	}
+
+	//
+	// Create shared pointer to camera
+	//
+	// *** NOTES ***
+	// The CameraPtr object is a shared pointer, and will generally clean itself
+	// up upon exiting its scope. However, if a shared pointer is created in the
+	// same scope that a system object is explicitly released (i.e. this scope),
+	// the reference to the shared point must be broken manually.
+	//
+	// *** LATER ***
+	// Shared pointers can be terminated manually by assigning them to nullptr.
+	// This keeps releasing the system from throwing an exception.
+	//
+	CameraPtr pCam = nullptr;
+
+	int result = 0;
+
+	// Run example on each camera
+	for (unsigned int i = 0; i < numCameras; i++)
+	{
+		// Select camera
+		pCam = camList.GetByIndex(i);
+
+		cout << endl << "Running example for camera " << i << "..." << endl;
+
+		// Run example
+		result = result | m_Acquisition->RunSingleCamera(pCam);
+
+		cout << "Camera " << i << " example complete..." << endl << endl;
+	}
+
+	//
+	// Release reference to the camera
+	//
+	// *** NOTES ***
+	// Had the CameraPtr object been created within the for-loop, it would not
+	// be necessary to manually break the reference because the shared pointer
+	// would have automatically cleaned itself up upon exiting the loop.
+	//
+	pCam = nullptr;
+
+	// Clear camera list before releasing system
+	camList.Clear();
+
+	// Release system
+	system->ReleaseInstance();
+
+	cout << endl << "Done! Press Enter to exit..." << endl;
+	getchar();
+
+	delete m_Acquisition;
+
+	return result;
 }
-
-// 프로그램 실행: <Ctrl+F5> 또는 [디버그] > [디버깅하지 않고 시작] 메뉴
-// 프로그램 디버그: <F5> 키 또는 [디버그] > [디버깅 시작] 메뉴
-
-// 시작을 위한 팁:
-//   1. [솔루션 탐색기] 창을 사용하여 파일을 추가/관리합니다.
-//   2. [팀 탐색기] 창을 사용하여 소스 제어에 연결합니다.
-//   3. [출력] 창을 사용하여 빌드 출력 및 기타 메시지를 확인합니다.
-//   4. [오류 목록] 창을 사용하여 오류를 봅니다.
-//   5. [프로젝트] > [새 항목 추가]로 이동하여 새 코드 파일을 만들거나, [프로젝트] > [기존 항목 추가]로 이동하여 기존 코드 파일을 프로젝트에 추가합니다.
-//   6. 나중에 이 프로젝트를 다시 열려면 [파일] > [열기] > [프로젝트]로 이동하고 .sln 파일을 선택합니다.

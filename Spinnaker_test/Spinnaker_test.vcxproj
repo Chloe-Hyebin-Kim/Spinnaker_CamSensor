@@ -78,9 +78,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>C:\Program Files\Teledyne\Spinnaker\lib64\vs2017;C:\Program Files\Teledyne\Spinnaker\lib64\vs2015;$(LibraryPath)</LibraryPath>
+    <ExternalIncludePath>C:\Program Files\Teledyne\Spinnaker\include;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <LibraryPath>C:\Program Files\Teledyne\Spinnaker\lib64\vs2017;C:\Program Files\Teledyne\Spinnaker\lib64\vs2015;$(LibraryPath)</LibraryPath>
+    <ExternalIncludePath>C:\Program Files\Teledyne\Spinnaker\include;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -117,12 +121,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Program Files\Teledyne\Spinnaker\include;C:\Program Files\Teledyne\Spinnaker\dependencies\GenICam_v3_0\library\CPP\include;C:\Program Files\Teledyne\Spinnaker\dependencies\GenICam_v3_0\library\CPP\include\Base;C:\Program Files\Teledyne\Spinnaker\dependencies\GenICam_v3_0\library\CPP\include\GenApi;C:\Program Files\Teledyne\Spinnaker\dependencies\GenICam_v3_0\library\CPP\include\CLProtocol;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Program Files\Teledyne\Spinnaker\lib64\vs2017;C:\Program Files\Teledyne\Spinnaker\lib64\vs2015;C:\Program Files\Teledyne\Spinnaker\dependencies\GenICam_v3_0\library\CPP\lib\Win64_x64\msvc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SpinnakerGPUd_v141.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Spinnakerd_v140.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -134,6 +139,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Program Files\Teledyne\Spinnaker\include;C:\Program Files\Teledyne\Spinnaker\dependencies\GenICam_v3_0\library\CPP\include;C:\Program Files\Teledyne\Spinnaker\dependencies\GenICam_v3_0\library\CPP\include\Base;C:\Program Files\Teledyne\Spinnaker\dependencies\GenICam_v3_0\library\CPP\include\GenApi;C:\Program Files\Teledyne\Spinnaker\dependencies\GenICam_v3_0\library\CPP\include\CLProtocol;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,14 +147,16 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Program Files\Teledyne\Spinnaker\lib64\vs2017;C:\Program Files\Teledyne\Spinnaker\lib64\vs2015;C:\Program Files\Teledyne\Spinnaker\dependencies\GenICam_v3_0\library\CPP\lib\Win64_x64\msvc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SpinnakerGPUd_v141.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Spinnakerd_v140.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Acquisition.cpp" />
     <ClCompile Include="Spinnaker_test.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Acquisition.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
