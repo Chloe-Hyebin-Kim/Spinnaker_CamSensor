@@ -1,11 +1,19 @@
 ﻿// Spinnaker_test.cpp : 이 파일에는 'main' 함수가 포함됩니다. 거기서 프로그램 실행이 시작되고 종료됩니다.
-//
 
+
+#include "Spinnaker.h"
+#include "SpinGenApi/SpinnakerGenApi.h"
 #include <iostream>
+#include <sstream>
+
+using namespace Spinnaker;
+using namespace Spinnaker::GenApi;
+using namespace Spinnaker::GenICam;
+using namespace std;
 
 int main()
 {
-	std::cout << "Hello World!\n";
+	cout << "Hello World!\n";
 }
 
 // 프로그램 실행: <Ctrl+F5> 또는 [디버그] > [디버깅하지 않고 시작] 메뉴
